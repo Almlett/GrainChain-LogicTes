@@ -7,4 +7,4 @@ COPY ./entrypoint.sh /src/entrypoint.sh
 RUN chmod +x /src/entrypoint.sh
 COPY . /src/
 ENV WDS_SOCKET_PORT=0
-ENTRYPOINT ["/src/entrypoint.sh"]
+ENTRYPOINT ["sh","/src/entrypoint.sh"]
