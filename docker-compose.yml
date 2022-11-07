@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+  server:
+    build:
+      context: ./server/
+      target: dev
+    volumes:
+      - ./server:/src
+    container_name: server
+    restart: always
+    command: yarn run start:dev
+    ports:
+      - "4000:4000"
+    environment:
+      NODE_ENV: development
+      PORT: 4000
+      DEBUG: nodejs-docker-express:*
+    networks:
+      - node-network
+
+  client:
+    build:
+      context: ./client/
+    volumes:
+      - ./client:/src
+    container_name: client
+    stdin_open: true
+    ports:
+      - "3000:3000"
+    networks:
+      - node-network
+
+networks:
+  node-network:
+    driver: bridge
