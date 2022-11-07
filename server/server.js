@@ -8,7 +8,7 @@
 const express = require('express');
 const cors = require('cors');
 const upload = require('express-fileupload');
-
+const iluminated_room = require('./controller/illuminated_room');
 const app = express();
 app.use(
 	cors({ origin: ['http://localhost:3000', 'http://127.0.0.1:3000'] })
@@ -16,14 +16,8 @@ app.use(
 
 const port = process.env.PORT || 4000;
 app.use(upload());
-app.get('/test', (req, res) => {
-	res.json({
-		success: true,
-		message: 'test',
-	});
-});
 
-//recibe file and read it
+/* This is the route that will receive the file from the client. */
 app.post('/upload', (req, res) => {
 	if (req.files) {
 		const room = [];
@@ -31,32 +25,8 @@ app.post('/upload', (req, res) => {
 		//valiodate file type txt
 		if (file.mimetype === 'text/plain') {
 			let content = file.data.toString('utf8');
-			let lines = content.split('\r\n');
-			let room_width = 0;
-			let room_height = lines.length;
-			let validation = true;
-			lines.forEach((line) => {
-				if(line.length > 0)	{
-					if (room_width !== 0 && line.length !== room_width) {
-						validation = false;
-					}
-					room_width = line.length;
-					let data = line.split('');
-					room.push(data);
-				}
-			});
-			if (validation) {
-				console.log(room, room_width, room_height, validation);
-				res.status(200).json({
-					success: true,
-					message: 'upload complete',
-				});
-			}else{
-				res.status(500).json({
-					success: false,
-					message: 'Error: The room is not valid',
-				});
-			}
+			let result = iluminated_room.main({content});
+			res.status(result.status_code).json(result);
 		} else {
 			res.status(500).json({
 				success: false,
@@ -66,7 +36,6 @@ app.post('/upload', (req, res) => {
 		
 	}
 });
-
 
 app.listen(port, () => {
 	console.log('App is listening on port ' + port);
