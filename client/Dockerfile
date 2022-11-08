@@ -1,4 +1,4 @@
-FROM node:16.4.2-alpine as base
+FROM node:16.10.0-alpine as base
 
 # set work directory
 WORKDIR /src
