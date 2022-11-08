@@ -26,7 +26,7 @@ const UploadFile = ({ response, setResponse }) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("file", file);
-    fetch("upload/", {
+    fetch("http://localhost:4000/upload/", {
       method: "POST",
       body: formData,
     })
